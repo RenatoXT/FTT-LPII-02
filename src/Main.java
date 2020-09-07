@@ -17,6 +17,7 @@ public class Main
             System.out.print("\n\n");
 			System.out.println("Digite sua escolha: ");
 
+            //Coloca um switch aqui
             final String choice = strInput.nextLine();
             if (choice.equals("1")) {
                 DAO.AddRecord();

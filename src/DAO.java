@@ -15,16 +15,31 @@ public class DAO {
      * Renomear variáveis
      */
 
+            // To-Do
+            /*
+             * Data de Entrega -> Converter para Date
+             * Tamanho -> Converter para Enum
+             * Cor -> Converter para Enum
+             */
+
+             /**
+              * public enum OpcoesTamanho {
+                PP(1), P(2), M(3), G(4), GG(5);
+
+                private final int valor;
+                OpcoesTamanho(int valorOpcao){
+                valor = valorOpcao;
+                }
+                public int getValor(){
+                return valor;
+                }
+                }
+              *
+              */
+
     public static void AddRecord() throws IOException {
         final BufferedWriter bw = new BufferedWriter(new FileWriter("desafio_db.txt", true));
         final Scanner strInput = new Scanner(System.in);
-
-        // To-Do
-        /*
-         * Data de Entrega -> Converter para Date
-         * Tamanho -> Converter para Enum
-         * Cor -> Converter para Enum
-         */
 
         System.out.print("Código do item: ");
         final int COD = Integer.parseInt(strInput.nextLine());
@@ -71,8 +86,6 @@ public class DAO {
     /**
      * Refatorar -> Substituir token por split
      * Inserir Try-catchs
-     * Terminar de inserir as variáveis no UpdateRecord
-     * Modificar o SearchRecord para ser similar ao update (Validação do código)
     */
 
     public static void ViewAllRecord() throws IOException {
@@ -98,7 +111,8 @@ public class DAO {
 
     public static void DeleteRecordByID() throws IOException {
         Scanner strInput = new Scanner(System.in);
-        String COD, record;
+        String record;
+        int COD;
 
         File tempDB = new File("desafio_db_temp.txt");
         File db = new File("desafio_db.txt");
@@ -109,11 +123,19 @@ public class DAO {
         System.out.println("Deletar produto");
 
         System.out.println("Insira o código do produto: ");
-        COD = strInput.nextLine();
+        COD = Integer.parseInt(strInput.nextLine());
 
-        while ((record = br.readLine()) != null) {
+            while ((record = br.readLine()) != null) {
+            StringTokenizer st = new StringTokenizer(record, ";");
+            int firstToken;
 
-            if (record.contains(COD))
+            try{
+                firstToken = Integer.valueOf(record.split(";")[0]);
+            } catch (Exception error){
+                firstToken = 0;
+            }
+
+            if (firstToken == COD)
                 continue;
 
             bw.write(record);
@@ -127,11 +149,21 @@ public class DAO {
 
         db.delete();
 
-        tempDB.renameTo(db);
+        boolean success = tempDB.renameTo(db);
+        if(success) {
+            System.out.println();
+            System.out.println("Item deletado com sucesso!");
+
+        } else {
+            System.out.println();
+            System.out.println("ERROR 500");
+            System.out.println("Ocorreu um erro, informe o suporte!");
+        }
     }
 
     public static void SearchRecordbyID() throws IOException {
-        String COD, record;
+        String record;
+        int COD;
         Scanner strInput = new Scanner(System.in);
 
         BufferedReader br = new BufferedReader(new FileReader("desafio_db.txt"));
@@ -139,48 +171,11 @@ public class DAO {
         System.out.println("Procurar produto");
 
         System.out.println("Insira o código do produto: ");
-        COD = strInput.nextLine();
-
-        while ((record = br.readLine()) != null) {
-
-            StringTokenizer st = new StringTokenizer(record, ";");
-            final List<String> elements = new ArrayList<String>();
-
-            if (record.contains(COD)) {
-                while (st.hasMoreTokens()) {
-                    elements.add(st.nextToken());
-                }
-
-                for (final String campos : elements) {
-                    System.out.print(String.valueOf(campos) + " | ");
-                }
-            }
-
-            System.out.println();
-
-        }
-
-        br.close();
-
-    }
-
-    public static void updateRecordbyID() throws IOException {
-        String newName, newAge, newAddr, record, record2;
-        int COD;
-
-        File db = new File("desafio_db.txt");
-        File tempDB = new File("desafio_db_temp.txt");
-
-        BufferedReader br = new BufferedReader(new FileReader(db));
-        BufferedWriter bw = new BufferedWriter(new FileWriter(tempDB));
-
-        Scanner strInput = new Scanner(System.in);
-
-        System.out.println("Atualizar produto");
-        System.out.println("Insira o código do produto: ");
         COD = Integer.parseInt(strInput.nextLine());
 
-        while ((record = br.readLine()) != null) {
+        System.out.println();
+
+            while ((record = br.readLine()) != null) {
             StringTokenizer st = new StringTokenizer(record, ";");
             int firstToken;
 
@@ -210,31 +205,109 @@ public class DAO {
 
         br.close();
 
-        System.out.print("Insira a nova Data de Entrada: ");
-        newName = strInput.nextLine();
+    }
 
-        System.out.print("Insira o novo Local da Compra: ");
-        newAge = strInput.nextLine();
+    public static void updateRecordbyID() throws IOException {
+        String newDtInput, newLocalCompra, newTipo, newMarca, newCarac, newTamanho, newCor;
+        float newEtiqVal, newPagoVal, newVal100, newPrecoSug;
+        String oldRecord, newRecord;
+        int COD;
 
-        System.out.print("Insira o novo Tipo: ");
-        newAddr = strInput.nextLine();
+        File db = new File("desafio_db.txt");
+        File tempDB = new File("desafio_db_temp.txt");
+
+        BufferedReader br = new BufferedReader(new FileReader(db));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(tempDB));
+
+        Scanner strInput = new Scanner(System.in);
 
 
-        BufferedReader br2 = new BufferedReader(new FileReader(db));
+        System.out.println("Atualizar produto");
+        System.out.println("Insira o código do produto: ");
+        COD = Integer.parseInt(strInput.nextLine());
 
-        while ((record2 = br2.readLine()) != null) {
+                while ((oldRecord = br.readLine()) != null) {
+            StringTokenizer st = new StringTokenizer(oldRecord, ";");
             int firstToken;
+
             try{
-                firstToken = Integer.valueOf(record2.split(";")[0]);
+                firstToken = Integer.valueOf(oldRecord.split(";")[0]);
             } catch (Exception error){
                 firstToken = 0;
             }
 
             if (firstToken == COD) {
-                bw.write(COD + ";" + newName + ";" + newAge + ";" + newAddr);
+                final List<String> elements = new ArrayList<String>();
+
+            if (firstToken == COD) {
+                while (st.hasMoreTokens()) {
+                    elements.add(st.nextToken());
+                }
+
+                for (final String campos : elements) {
+                    System.out.print(String.valueOf(campos) + " | ");
+                }
+            }
+
+            System.out.println();
+            }
+
+        }
+
+        br.close();
+
+        System.out.print("nova data de Entrada: ");
+        newDtInput = strInput.nextLine();
+
+        System.out.print("Local da Compra: ");
+        newLocalCompra = strInput.nextLine();
+
+        System.out.print("Tipo: ");
+        newTipo = strInput.nextLine();
+
+        System.out.print("Marca: ");
+        newMarca = strInput.nextLine();
+
+        System.out.print("Características: ");
+        newCarac = strInput.nextLine();
+
+        System.out.print("Tamanho: ");
+        newTamanho = strInput.nextLine();
+
+        System.out.print("Cor: ");
+        newCor = strInput.nextLine();
+
+        System.out.print("Valor de etiqueta na compra: ");
+        newEtiqVal = Float.parseFloat(strInput.nextLine());
+
+        System.out.print("Valor pago na compra: ");
+        newPagoVal = Float.parseFloat(strInput.nextLine());
+
+        newVal100 = 2 * newPagoVal;
+
+        System.out.print("Preço sugerido: ");
+        newPrecoSug = Float.parseFloat(strInput.nextLine());
+
+
+
+
+        BufferedReader br2 = new BufferedReader(new FileReader(db));
+
+        while ((newRecord = br2.readLine()) != null) {
+            int firstToken;
+            try{
+                firstToken = Integer.valueOf(newRecord.split(";")[0]);
+            } catch (Exception error){
+                firstToken = 0;
+            }
+
+            if (firstToken == COD) {
+                bw.write(COD + ";" + newDtInput + ";" + newLocalCompra + ";" + newTipo + ";" +
+                        newMarca + ";" + newCarac + ";" + newTamanho + ";" + newCor + ";" + newEtiqVal +
+                        ";" + newVal100 + ";" + newPrecoSug);
             } else {
 
-                bw.write(record2);
+                bw.write(newRecord);
             }
             bw.flush();
             bw.newLine();
@@ -244,7 +317,14 @@ public class DAO {
         br2.close();
         db.delete();
         boolean success = tempDB.renameTo(db);
-        System.out.println(success);
+        if(success) {
+            System.out.println();
+            System.out.println("Atualização realizada com sucesso!");
 
+        } else {
+            System.out.println();
+            System.out.println("ERROR 500");
+            System.out.println("Ocorreu um erro, informe o suporte!");
+        }
     }
 }
