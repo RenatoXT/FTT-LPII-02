@@ -1,9 +1,9 @@
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Scanner;
 
-public class Main
-{
-    public static void main(final String[] args) throws IOException {
+public class Main {
+    public static void main(final String[] args) throws IOException, ParseException {
         final Scanner strInput = new Scanner(System.in);
         for (String cont = "s"; cont.equalsIgnoreCase("s"); cont = strInput.nextLine()) {
 

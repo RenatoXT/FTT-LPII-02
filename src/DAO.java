@@ -1,51 +1,42 @@
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.StringTokenizer;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 public class DAO {
-
-    /**
-     * Renomear variáveis
-     */
-
-            // To-Do
-            /*
-             * Data de Entrega -> Converter para Date
-             * Tamanho -> Converter para Enum
-             * Cor -> Converter para Enum
-             */
-
-             /**
-              * public enum OpcoesTamanho {
-                PP(1), P(2), M(3), G(4), GG(5);
-
-                private final int valor;
-                OpcoesTamanho(int valorOpcao){
-                valor = valorOpcao;
-                }
-                public int getValor(){
-                return valor;
-                }
-                }
-              *
-              */
+    /*
+     * Refatorar -> Substituir token por split
+     * Inserir Try-catchs
+     * Converter a data para simple date na visualização
+    */
 
     public static void AddRecord() throws IOException {
         final BufferedWriter bw = new BufferedWriter(new FileWriter("desafio_db.txt", true));
         final Scanner strInput = new Scanner(System.in);
+        Date DTEntr;
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
 
         System.out.print("Código do item: ");
         final int COD = Integer.parseInt(strInput.nextLine());
 
         System.out.print("Data de Entrada: ");
-        final String DTEntr = strInput.nextLine();
+        try{
+            DTEntr = formato.parse(strInput.nextLine());
+        }catch (ParseException e) {
+            DTEntr = new Date();
+        }
 
         System.out.print("Local da Compra: ");
         final String LocComp = strInput.nextLine();
@@ -59,11 +50,12 @@ public class DAO {
         System.out.print("Características: ");
         final String Caract = strInput.nextLine();
 
-        System.out.print("Tamanho: ");
-        final String Size = strInput.nextLine();
+        System.out.print("Tamanho [PP, P, M, G, GG]: ");
+        final StorageModel.OpcoesTamanho Size = StorageModel.OpcoesTamanho.valueOf(strInput.nextLine().toUpperCase());
 
-        System.out.print("Cor: ");
-        final String Cor = strInput.nextLine();
+        System.out.print("Cor[Roxo, Preto, Branco, Vermelho, Rosa]: ");
+        String convert_cor = strInput.nextLine().toLowerCase();
+        final StorageModel.OpcoesCor Cor = StorageModel.OpcoesCor.valueOf(convert_cor.substring(0, 1).toUpperCase() + convert_cor.substring(1).toLowerCase());
 
         System.out.print("Valor de etiqueta na compra: ");
         final float ValEtiq = Float.parseFloat(strInput.nextLine());
@@ -77,18 +69,15 @@ public class DAO {
         final float ValSug = Float.parseFloat(strInput.nextLine());
 
         bw.write(COD + ";" + DTEntr + ";" + LocComp + ";" + Tipo + ";" + Marca + ";" + Caract + ";"
-                + Size + ";" + ValEtiq + ";" + ValComp + ";" + Val100 + ";" + ValSug);
+                + Size + ";" + Cor + ";" + ValEtiq + ";" + ValComp + ";" + Val100 + ";" + ValSug);
         bw.flush();
         bw.newLine();
         bw.close();
     }
 
-    /**
-     * Refatorar -> Substituir token por split
-     * Inserir Try-catchs
-    */
 
-    public static void ViewAllRecord() throws IOException {
+
+    public static void ViewAllRecord() throws IOException, ParseException {
         final BufferedReader br = new BufferedReader(new FileReader("desafio_db.txt"));
         String record;
 
@@ -99,6 +88,8 @@ public class DAO {
             while (st.hasMoreTokens()) {
                 elements.add(st.nextToken());
             }
+
+            //elements.set(1, (new SimpleDateFormat("MM/dd/yyyy").parse(elements.get(1))).toString());
 
             for (final String campos : elements) {
                 System.out.print(String.valueOf(campos) + " | ");
