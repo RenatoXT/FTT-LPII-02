@@ -4,12 +4,12 @@ public class StorageModel {
 
         private final int valor;
 
-        OpcoesTamanho(int valorOpcao){
-        valor = valorOpcao;
+        OpcoesTamanho(int valorOpcao) {
+            valor = valorOpcao;
         }
 
-        public int getValor(){
-        return valor;
+        public int getValor() {
+            return valor;
         }
     }
 
@@ -18,12 +18,12 @@ public class StorageModel {
 
         private final int valor;
 
-        OpcoesCor(int valorOpcao){
-        valor = valorOpcao;
+        OpcoesCor(int valorOpcao) {
+            valor = valorOpcao;
         }
 
-        public int getValor(){
-        return valor;
+        public int getValor() {
+            return valor;
         }
     }
 }
