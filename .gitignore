@@ -1,3 +1,10 @@
 target
 lib
+<<<<<<< HEAD
 pom.xml
+=======
+pom.xml
+.settings
+desafio_db.txt
+desafio_db_temp.txt
+>>>>>>> feature/davi
