@@ -7,7 +7,7 @@ public class Main {
         final Scanner strInput = new Scanner(System.in);
         for (String cont = "s"; cont.equalsIgnoreCase("s"); cont = strInput.nextLine()) {
 
-			System.out.println("Controle de Estoque -> Renner do Seu Jão");
+			System.out.println("Controle de Estoque");
 			System.out.println();
             System.out.println("1 ===> Adicionar novo produto ");
             System.out.println("2 ===> Visualizar todos os produtos ");
@@ -17,7 +17,7 @@ public class Main {
             System.out.print("\n\n");
 			System.out.println("Digite sua escolha: ");
 
-            //Coloca um switch aqui
+            
             final String choice = strInput.nextLine();
             if (choice.equals("1")) {
                 DAO.AddRecord();

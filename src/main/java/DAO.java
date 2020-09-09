@@ -14,11 +14,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 public class DAO {
-    /*
-     * Refatorar -> Substituir token por split
-     * Inserir Try-catchs
-     * Converter a data para simple date na visualização
-    */
 
     public static void AddRecord() throws IOException {
            try{
@@ -56,7 +51,6 @@ public class DAO {
             final float Val100 = 2 * ValComp;
             System.out.println("Preço sugerido: ");
             final float ValSug = Float.parseFloat(strInput.nextLine());
-            bw.newLine();
             bw.write(COD + ";" + DTEntr + ";" + LocComp + ";" + Tipo + ";" + Marca + ";" + Caract + ";"
                     + Size + ";" + Cor + ";" + ValEtiq + ";" + ValComp + ";" + Val100 + ";" + ValSug);
             bw.flush();
@@ -84,7 +78,7 @@ public class DAO {
                     elements.add(st.nextToken());
                 }
                 
-                //elements.set(1, (new SimpleDateFormat("MM/dd/yyyy").parse(elements.get(1))).toString());
+                
                 
                 for (final String campos : elements) {
                     System.out.print(String.valueOf(campos) + " | ");
@@ -107,7 +101,7 @@ public class DAO {
 
         File tempDB = new File("desafio_db_temp.txt");
         File db = new File("desafio_db.txt");
-
+        try{
         BufferedReader br = new BufferedReader(new FileReader(db));
         BufferedWriter bw = new BufferedWriter(new FileWriter(tempDB));
 
@@ -150,6 +144,10 @@ public class DAO {
             System.out.println();
             System.out.println("ERROR 500");
             System.out.println("Ocorreu um erro, informe o suporte!");
+        }
+        }catch(Exception error){
+            System.out.println();
+            System.out.println(error.getMessage());
         }
     }
 

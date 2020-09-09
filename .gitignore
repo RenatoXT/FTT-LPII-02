@@ -1,0 +1,6 @@
+target
+lib
+pom.xml
+.settings
+desafio_db.txt
+desafio_db_temp.txt
